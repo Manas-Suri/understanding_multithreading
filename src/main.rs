@@ -1,6 +1,4 @@
-use std::io;
 use std::sync::{mpsc, Arc, Mutex};
-use std::thread;
 
 mod first_thread;
 mod second_thread;
@@ -8,23 +6,17 @@ mod third_thread;
 mod led_struct;
 mod interfaces;
 
-
 fn main() {
     let (tx, rx) = mpsc::channel();
     let (tx1, rx1) = mpsc::channel();
     let user = Arc::new(Mutex::new(led_struct::Led::new(false,15))); 
-    
     let rx = Arc::new(Mutex::new(rx)); // Wrap rx in Arc<Mutex> for shared ownership
-
     loop {
         println!("Press '1' to start the first thread, '2' to start the second thread, or 'q' to quit:");
-
         let input1 = interfaces::run_interfaces(tx1.clone());
         input1.join().unwrap();
-
         let received1 = rx1.recv().unwrap();
         println!("Second thread received: {}", received1);
-
         match received1.as_str() {
             "1" => {
                 let first_thread_handle = first_thread::run_first_thread(tx.clone(),user.clone());
