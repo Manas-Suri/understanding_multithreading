@@ -9,7 +9,7 @@ pub fn run_third_thread(tx: mpsc::Sender<String>,user: Arc<Mutex<Led>>) -> threa
     thread::spawn(move ||{
 
         let mut led = user.lock().unwrap();
-        led.toggle(); // Toggle the LED state
+        // led.toggle(); // Toggle the LED state
         println!("First thread toggled LED: state = {}, pin = {}", led.get_state(), led.get_pin());
 
 
